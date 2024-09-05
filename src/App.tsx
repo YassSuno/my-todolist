@@ -4,8 +4,15 @@ import { Header } from "./component/Header";
 import { InputButton } from "./component/InputButton";
 import { ToDoList } from "./component/ToDoList";
 
+export interface SetOfToDoList {
+  isChecked: boolean;
+  name: string;
+  isEditing: boolean;
+  isDeleted: boolean;
+}
+
 export function App() {
-  const [toDoList, setToDoList] = React.useState([]);
+  const [toDoList, setToDoList] = React.useState<SetOfToDoList[]>([]);
 
   return (
     <div>
