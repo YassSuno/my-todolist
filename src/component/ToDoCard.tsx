@@ -1,11 +1,12 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import "../App.css";
+import { SetOfToDoList } from "../App";
 
 export interface ToDoCardProps {
-  value: string;
+  value: SetOfToDoList;
   index: number;
-  setToDoList: React.Dispatch<React.SetStateAction<string[]>>;
-  toDoList: string[];
+  setToDoList: React.Dispatch<React.SetStateAction<SetOfToDoList[]>>;
+  toDoList: SetOfToDoList[];
 }
 
 export function ToDoCard({
@@ -14,17 +15,49 @@ export function ToDoCard({
   setToDoList,
   toDoList,
 }: ToDoCardProps) {
+  const [newName, setNewName] = React.useState(value.name);
+
+  const handleCheck = () => {
+    // setIsChecked(!isChecked);
+    const x = toDoList.filter(
+      (toDoList, indexToDoList) => indexToDoList !== index
+    );
+    const y = [...x, { ...value, isChecked: !value.isChecked }];
+    setToDoList(y);
+  };
   const handleDelete = () => {
-    const newArr = toDoList.filter((_, indexValue) => indexValue !== index);
-    setToDoList(newArr);
+    const x = toDoList.filter((_, indexToDoList) => indexToDoList !== index);
+    setToDoList(x);
   };
 
-  const handleEdit = () => {};
+  const handleEdit = () => {
+    const x = toDoList.filter((_, indexToDoList) => indexToDoList !== index);
+    const y = [...x, { ...value, isEditing: !value.isEditing }];
+    setToDoList(y);
+  };
+
+  const handleChange = (event) => {
+    setNewName(event.target.value);
+  };
+
+  let editableToDoList = <p>{newName}</p>;
+
+  if (value.isEditing) {
+    editableToDoList = (
+      <input
+        required
+        type="text"
+        value={newName}
+        onChange={handleChange}
+      ></input>
+    );
+  }
 
   return (
     <div>
-      <p>{value}</p>
-      <button>edit</button>
+      <input type="checkbox" onClick={handleCheck} />
+      {editableToDoList}
+      <button onClick={handleEdit}>{value.isEditing ? "Save" : "Edit"}</button>
       <button onClick={handleDelete}>delete</button>
     </div>
   );
